@@ -9,3 +9,9 @@ export const getArticles = (filterValue, topic) => {
         return data.articles
     })
 }
+
+export const getArticle = (article_id) => {
+    return ncNewsAPI.get(`/articles/${article_id}`).then(({data}) => {
+        return data.article
+    })
+}

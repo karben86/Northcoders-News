@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {getArticles} from '../API'
+import { Link } from "@reach/router";
 
 class Home extends Component {
   state = {
@@ -50,10 +51,10 @@ class Home extends Component {
         </select>
         <ul>
             {articles.map(article => (
-                <li key={article.article_id}>
+               <Link to={"/" + article.article_id}><li key={article.article_id}>
                     <h2>{article.title}</h2>
                     Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}
-                </li>
+                </li></Link> 
             ))}
         </ul>
       </main>

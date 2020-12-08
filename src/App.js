@@ -3,6 +3,7 @@ import Header from "./Components/Header";
 import Nav from "./Components/Nav";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
+import Article from "./Components/Article";
 import { Router } from "@reach/router";
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
       <Nav />
       <Router>
         <Login path="/login" />
-        <Article path="/article_id" />
+        <Article path="/:article_id" />
         <Home path="/" />
       </Router>
     </div>
