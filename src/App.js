@@ -12,6 +12,7 @@ function App() {
       <Nav />
       <Router>
         <Login path="/login" />
+        <Article path="/article_id" />
         <Home path="/" />
       </Router>
     </div>

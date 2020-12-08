@@ -23,22 +23,10 @@ class Home extends Component {
     }
   };
 
-  // handleClick = (target) => {
-  //   if (target.className === "DisplayAllStudent-Btn")
-  //     this.setState({ displayAllStudents: true, displaySingle: false });
-  //   if (target.className === "DisplaySingleStudent-Btn")
-  //     this.setState({ displaySingle: true, displayAllStudents: false });
-  // };
-
   handleChange = (event) => {
     const { value, id } = event.target;
     this.setState({ [id]: value });
   };
-
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   navigate(`/students/${this.state.selectedId}`);
-  // };
 
   render() {
     const {
@@ -64,6 +52,7 @@ class Home extends Component {
             {articles.map(article => (
                 <li key={article.article_id}>
                     <h2>{article.title}</h2>
+                    Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}
                 </li>
             ))}
         </ul>
