@@ -7,7 +7,8 @@ class Home extends Component {
     articles: [],
     isLoading: true,
     filterValue: 50,
-    topic: null
+    topic: null,
+    buttonText: "🔽"
   };
 
   componentDidMount() {
@@ -26,7 +27,15 @@ class Home extends Component {
 
   handleChange = (event) => {
     const { value, id } = event.target;
+    console.log(value)
     this.setState({ [id]: value });
+  };
+
+  buttonClick = (event) => {
+    const {innerText} = event.target;
+    console.log(innerText)
+    if (innerText === "🔽") this.setState({buttonText: "🔼"});
+    else this.setState({buttonText: "🔽"});
   };
 
   render() {
@@ -37,18 +46,31 @@ class Home extends Component {
     return (
       <main>
         <h2>Articles</h2>
+        <p>
         How many results do you want to display?
         <br></br>
         <input type="range" id="filterValue" onChange={this.handleChange}></input> {this.state.filterValue}
-        <br></br>
+        </p>
+        <p>
         Which topic are you interested in?
         <br></br>
         <select id="topic" onChange={this.handleChange}>
-          <option value={null}>All</option>
+          <option value="">All</option>
           <option value="coding">Coding</option>
           <option value="football">Football</option>
           <option value="cooking">Cooking</option>
         </select>
+        </p>
+        <p>
+        How do you want to sort your data?
+        <br></br>
+        <select id="sort" onChange={this.handleChange}>
+          <option value="title">Title</option>
+          <option value="created_at">Date</option>
+          <option value="comment_count">Comment Count</option>
+          <option value="votes">Votes</option>
+        </select> <button id="buttonStyle" onClick={this.buttonClick}>{this.state.buttonText}</button>
+        </p>
         <ul>
             {articles.map(article => (
                <Link to={"/" + article.article_id}><li key={article.article_id}>
