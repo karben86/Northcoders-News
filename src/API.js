@@ -16,6 +16,12 @@ export const getArticle = (article_id) => {
     })
 }
 
+export const updateArticle = (article_id, votes) => {
+    return ncNewsAPI.patch(`/articles/${article_id}`, { inc_votes: votes}).then(({data}) => {
+        return data.updatedArticle
+    })
+}
+
 export const getComments = (article_id) => {
     return ncNewsAPI.get(`/articles/${article_id}/comments`).then(({data}) => {
         return data.comments

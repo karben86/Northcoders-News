@@ -16,11 +16,8 @@ li {
   border-style: ridge;
 }
 
-#buttonStyle {
+.buttonStyle {
   padding: 0%;
   background-color: Transparent;
   border: none;
-}
-
-#newComment {
 }

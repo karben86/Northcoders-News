@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getArticles} from '../API'
+import {getArticles, updateArticle} from '../API'
 import { Link } from "@reach/router";
 
 class Home extends Component {
@@ -10,13 +10,17 @@ class Home extends Component {
     topic: null,
     buttonText: "🔽",
     sort_by: "title",
-    order: "desc"
+    order: "desc",
+    buttonDisabled: {}
   };
 
+  
   componentDidMount() {
+    const buttonRef = {};
     getArticles(this.state.limit, this.state.topic, this.state.sort_by, this.state.order).then((articles) => {
-      this.setState({ articles, isLoading: false });
-    });
+      articles.forEach(article => buttonRef[article.article_id] = false)
+      this.setState({ articles, isLoading: false, buttonDisabled: buttonRef});
+    })
   }
 
   componentDidUpdate = (prepsProps, preState) => {
@@ -32,17 +36,27 @@ class Home extends Component {
     this.setState({ [id]: value });
   };
 
-  buttonClick = (event) => {
+  sortClick = (event) => {
     const {innerText} = event.target;
     if (innerText === "🔽") this.setState({buttonText: "🔼", order: "asc"});
     else this.setState({buttonText: "🔽", order: "desc"});
+  };
+  
+  voteClick = (id, votes) => {
+    const buttonStatus = {...this.state.buttonDisabled}
+    buttonStatus[id] = true
+    updateArticle(id, votes).then((updatedArticle) => {
+    this.setState((currState) => {
+      return {buttonDisabled: buttonStatus, articles: [updatedArticle[0], ...currState.articles]}
+    })
+    })
   };
 
   render() {
     const {
       articles
     } = this.state;
-
+    console.log(this.state)
     return (
       <main>
         <h2>Articles</h2>
@@ -69,14 +83,22 @@ class Home extends Component {
           <option value="created_at">Date</option>
           <option value="comment_count">Comment Count</option>
           <option value="votes">Votes</option>
-        </select> <button id="buttonStyle" onClick={this.buttonClick}>{this.state.buttonText}</button>
+        </select> <button className="buttonStyle" onClick={this.sortClick}>{this.state.buttonText}</button>
         </p>
         <ul>
             {articles.map(article => (
-               <li key={article.article_id}><Link to={"/" + article.article_id}>
+               <li key={article.article_id + 1}><Link key={article.article_id + 1} style={{ textDecoration: 'none' }} to={"/" + article.article_id}>
                     <h2>{article.title}</h2>
+                    
                     Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}
-                    </Link> </li>
+                    <br></br>
+                    <br></br>
+                    </Link>
+                    <div key={article.article_id + 2}>
+                    Vote for this article: <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, 1)} disabled={this.state.buttonDisabled[article.article_id]}>👆</button>
+                    <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, -1)} disabled={this.state.buttonDisabled[article.article_id]}>👇</button>
+                    </div>
+                    </li>
             ))}
         </ul>
       </main>
