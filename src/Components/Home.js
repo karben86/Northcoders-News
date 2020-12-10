@@ -43,12 +43,14 @@ class Home extends Component {
   };
   
   voteClick = (id, votes) => {
-    const buttonStatus = {...this.state.buttonDisabled}
-    buttonStatus[id] = true
-    updateArticle(id, votes).then((updatedArticle) => {
-    this.setState((currState) => {
-      return {buttonDisabled: buttonStatus, articles: [updatedArticle[0], ...currState.articles]}
+    const updatedButtons = {...this.state.buttonDisabled}
+    updatedButtons[id] = true
+    const updatedArticles = [...this.state.articles].map(article => {
+      if (article.article_id === id) article.votes += votes;
+      return article;
     })
+    updateArticle(id, votes).then((updatedArticle) => {
+    this.setState({buttonDisabled: updatedButtons, articles: updatedArticles})
     })
   };
 
