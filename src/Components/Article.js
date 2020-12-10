@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getArticle, getComments, postComment} from '../API'
+import {getArticle, getComments, postComment, deleteComment} from '../API'
 
 class Article extends Component {
     state = {article: {}, comments: [], isLoading1: true, isLoading2: true, newComment: ""}
@@ -22,20 +22,25 @@ class Article extends Component {
         event.preventDefault();
         const comment = {body: this.state.newComment, username: 'jessjelly'}
         postComment(this.props.article_id, comment).then((createdComment) => {
-            console.log(createdComment)
             this.setState((currState) => {
-                console.log({comments: [createdComment, currState.comments]})
                 return {comments: [createdComment[0], ...currState.comments]}
             })
-            
         });
       }
 
+    handleDelete = (event) => {
+        deleteComment(event.target.id).then(() => {
+            this.setState((currState) => {
+                return {comments: [...currState.comments].filter(comment => comment.comment_id !== +event.target.id)}
+            })
+        });
+    }
+
     render(){
+        console.log(this.state)
         let {article, comments} = this.state;
         article = article[0];
         const {isLoading1, isLoading2} = this.state
-        console.log(this.state)
         return (
             <main>
             {isLoading1 + isLoading2 ? null : 
@@ -58,6 +63,8 @@ class Article extends Component {
                <li key={comment.comment_id}>
                    <p>{comment.body}</p>
                     Author: {comment.author} | Votes: {comment.votes} | Date: {comment.created_at.slice(0,10)}
+                    <br></br>
+                    {comment.author === "jessjelly" ? <button id={comment.comment_id} onClick={this.handleDelete}>Delete Comment</button> :null}
                 </li>
             ))}
         </ul>
