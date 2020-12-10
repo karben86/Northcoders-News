@@ -6,20 +6,22 @@ class Home extends Component {
   state = {
     articles: [],
     isLoading: true,
-    filterValue: 50,
+    limit: 50,
     topic: null,
-    buttonText: "🔽"
+    buttonText: "🔽",
+    sort_by: "title",
+    order: "desc"
   };
 
   componentDidMount() {
-    getArticles(this.state.filterValue).then((articles) => {
+    getArticles(this.state.limit, this.state.topic, this.state.sort_by, this.state.order).then((articles) => {
       this.setState({ articles, isLoading: false });
     });
   }
 
   componentDidUpdate = (prepsProps, preState) => {
-  if ((preState.filterValue !== this.state.filterValue) || (preState.topic !== this.state.topic)) {
-      return getArticles(this.state.filterValue, this.state.topic).then((articles) => {
+  if ((preState.limit !== this.state.limit) || (preState.topic !== this.state.topic) || (preState.sort_by !== this.state.sort_by) || (preState.order !== this.state.order)) {
+      return getArticles(this.state.limit, this.state.topic, this.state.sort_by, this.state.order).then((articles) => {
         this.setState({ articles, isLoading: false });
       })
     }
@@ -27,15 +29,13 @@ class Home extends Component {
 
   handleChange = (event) => {
     const { value, id } = event.target;
-    console.log(value)
     this.setState({ [id]: value });
   };
 
   buttonClick = (event) => {
     const {innerText} = event.target;
-    console.log(innerText)
-    if (innerText === "🔽") this.setState({buttonText: "🔼"});
-    else this.setState({buttonText: "🔽"});
+    if (innerText === "🔽") this.setState({buttonText: "🔼", order: "asc"});
+    else this.setState({buttonText: "🔽", order: "desc"});
   };
 
   render() {
@@ -49,7 +49,7 @@ class Home extends Component {
         <p>
         How many results do you want to display?
         <br></br>
-        <input type="range" id="filterValue" onChange={this.handleChange}></input> {this.state.filterValue}
+        <input type="range" id="limit" onChange={this.handleChange}></input> {this.state.limit}
         </p>
         <p>
         Which topic are you interested in?
@@ -64,7 +64,7 @@ class Home extends Component {
         <p>
         How do you want to sort your data?
         <br></br>
-        <select id="sort" onChange={this.handleChange}>
+        <select id="sort_by" onChange={this.handleChange}>
           <option value="title">Title</option>
           <option value="created_at">Date</option>
           <option value="comment_count">Comment Count</option>

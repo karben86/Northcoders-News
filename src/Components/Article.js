@@ -1,33 +1,57 @@
 import React, { Component } from "react";
-import {getArticle, getComments} from '../API'
+import {getArticle, getComments, postComment} from '../API'
 
 class Article extends Component {
-    state = {article: {}, comments: {}, isLoading: true}
+    state = {article: {}, comments: [], isLoading1: true, isLoading2: true, newComment: ""}
     
 
     componentDidMount() {
         getArticle(this.props.article_id).then((article) => {
-          this.setState({ article});
+          this.setState({ article, isLoading1: false});
         })
         .then(getComments(this.props.article_id).then((comments) => {
-            this.setState({ comments, isLoading: false });
+            this.setState({ comments, isLoading2: false });
         }))
+      }
+
+      handleChange = (event) => {
+        this.setState({ newComment: event.target.value });
+      };
+
+      handleSubmit = (event) => {
+        event.preventDefault();
+        const comment = {body: this.state.newComment, username: 'jessjelly'}
+        postComment(this.props.article_id, comment).then((createdComment) => {
+            console.log(createdComment)
+            this.setState((currState) => {
+                console.log({comments: [createdComment, currState.comments]})
+                return {comments: [createdComment[0], ...currState.comments]}
+            })
+            
+        });
       }
 
     render(){
         let {article, comments} = this.state;
         article = article[0];
-        const {isLoading} = this.state
-
+        const {isLoading1, isLoading2} = this.state
+        console.log(this.state)
         return (
             <main>
-            {isLoading ? null : 
+            {isLoading1 + isLoading2 ? null : 
             (
             <div>
             <h2>Article {article.article_id}</h2>
             <h3> {article.title} </h3>
             <p>{article.body}</p>
             <p><b>Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}</b></p>
+            <form onSubmit={this.handleSubmit}>
+                <label htmlFor="newComment">Post New Comment:</label>
+                <br></br>
+                <textarea id="newComment" name="newComment" rows="4" cols="50" onChange={this.handleChange}></textarea>
+                <br></br>
+                <button type="submit">Submit</button>
+            </form>
             <h3> Comments </h3>
             <ul>
             {comments.map(comment => (
