@@ -38,3 +38,9 @@ export const postComment = (article_id, newComment) => {
 export const deleteComment = (comment_id) => {
     return ncNewsAPI.delete(`/comments/${comment_id}`)
 }
+
+export const updateComment = (comment_id, votes) => {
+    return ncNewsAPI.patch(`/comments/${comment_id}`, { inc_votes: votes}).then(({data}) => {
+        return data.updatedComment
+    })
+}

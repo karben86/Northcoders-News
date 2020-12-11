@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import {getArticle, getComments, postComment, deleteComment} from '../API'
+import {getArticle, getComments, postComment, deleteComment, updateComment} from '../API'
 
 class Article extends Component {
-    state = {article: {}, comments: [], isLoading1: true, isLoading2: true, newComment: ""}
+    state = {article: {},
+    comments: [],
+    isLoading: true,
+    newComment: "",
+    buttonDisabled: {}}
     
 
     componentDidMount() {
-        getArticle(this.props.article_id).then((article) => {
-          this.setState({ article, isLoading1: false});
-        })
-        .then(getComments(this.props.article_id).then((comments) => {
-            this.setState({ comments, isLoading2: false });
-        }))
+        const buttonRef = {};
+        Promise.all([getArticle(this.props.article_id), getComments(this.props.article_id)])
+        .then(([article, comments]) => {
+            comments.forEach(comment => buttonRef[comment.comment_id] = false)
+            this.setState({ article, comments, buttonDisabled: buttonRef, isLoading: false});
+          })
       }
 
       handleChange = (event) => {
@@ -36,14 +40,25 @@ class Article extends Component {
         });
     }
 
+    voteClick = (id, votes) => {
+        const updatedButtons = {...this.state.buttonDisabled}
+        updatedButtons[id] = true
+        const updatedComments = [...this.state.comments].map(comment => {
+          if (comment.comment_id === id) comment.votes += votes;
+          return comment;
+        })
+        updateComment(id, votes).then(() => {
+        this.setState({buttonDisabled: updatedButtons, articles: updatedComments})
+        })
+      };
+
     render(){
-        console.log(this.state)
         let {article, comments} = this.state;
         article = article[0];
-        const {isLoading1, isLoading2} = this.state
+        const {isLoading} = this.state
         return (
             <main>
-            {isLoading1 + isLoading2 ? null : 
+            {isLoading ? null : 
             (
             <div>
             <h2>Article {article.article_id}</h2>
@@ -53,7 +68,7 @@ class Article extends Component {
             <form onSubmit={this.handleSubmit}>
                 <label htmlFor="newComment">Post New Comment:</label>
                 <br></br>
-                <textarea id="newComment" name="newComment" rows="4" cols="50" onChange={this.handleChange}></textarea>
+                <textarea id="newComment" name="newComment" rows="4" cols="50" onChange={this.handleChange} required></textarea>
                 <br></br>
                 <button type="submit">Submit</button>
             </form>
@@ -65,6 +80,8 @@ class Article extends Component {
                     Author: {comment.author} | Votes: {comment.votes} | Date: {comment.created_at.slice(0,10)}
                     <br></br>
                     {comment.author === "jessjelly" ? <button id={comment.comment_id} onClick={this.handleDelete}>Delete Comment</button> :null}
+                    Vote for this comment: <button className="buttonStyle" onClick={(event) => this.voteClick(comment.comment_id, 1)} disabled={this.state.buttonDisabled[comment.comment_id]}>👆</button>
+                    <button className="buttonStyle" onClick={(event) => this.voteClick(comment.comment_id, -1)} disabled={this.state.buttonDisabled[comment.comment_id]}>👇</button>
                 </li>
             ))}
         </ul>

@@ -49,7 +49,7 @@ class Home extends Component {
       if (article.article_id === id) article.votes += votes;
       return article;
     })
-    updateArticle(id, votes).then((updatedArticle) => {
+    updateArticle(id, votes).then(() => {
     this.setState({buttonDisabled: updatedButtons, articles: updatedArticles})
     })
   };
@@ -89,17 +89,15 @@ class Home extends Component {
         </p>
         <ul>
             {articles.map(article => (
-               <li key={article.article_id + 1}><Link key={article.article_id + 1} style={{ textDecoration: 'none' }} to={"/" + article.article_id}>
+               <li key={article.article_id + 1}><Link style={{ textDecoration: 'none' }} to={"/" + article.article_id}>
                     <h2>{article.title}</h2>
                     
                     Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}
                     <br></br>
                     <br></br>
                     </Link>
-                    <div key={article.article_id + 2}>
                     Vote for this article: <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, 1)} disabled={this.state.buttonDisabled[article.article_id]}>👆</button>
                     <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, -1)} disabled={this.state.buttonDisabled[article.article_id]}>👇</button>
-                    </div>
                     </li>
             ))}
         </ul>
