@@ -1,14 +1,46 @@
+body {
+  background-image: url("newspaper.jpg");
+  font-family: "Courier", monospace;
+}
+
+.topPage {
+  background-image: url("news.jpg");
+  margin: -1%;
+  padding: 8%;
+}
+
+.navbar {
+  font-size: 175%;
+  /* background-color: rgba(229, 226, 226, 0.87); */
+}
+
+h1 {
+  font-size: 400%;
+  background-color: rgba(229, 226, 226, 0.87);
+}
+
+h2 {
+  font-size: 250%;
+}
+
+h3 {
+  font-size: 150%;
+}
+
 .App {
   text-align: center;
 }
 
 .link {
-  padding: 5px;
+  padding: 20px;
+}
+
+u {
+  list-style-type: none;
+  padding-left: 0;
 }
 
 li {
-  list-style-type: none;
-  padding-left: 0;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -20,4 +52,8 @@ li {
   padding: 0%;
   background-color: Transparent;
   border: none;
+}
+
+a {
+  color: black;
 }

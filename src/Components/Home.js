@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {getArticles, updateArticle} from '../API'
 import { Link } from "@reach/router";
+// import logo from './news.jpg'
 
 class Home extends Component {
   state = {
@@ -62,6 +63,7 @@ class Home extends Component {
     return (
       <main>
         <h2>Articles</h2>
+        {/* <img src={logo} alt="typewriter"></img>news.jpg */}
         <p>
         How many results do you want to display?
         <br></br>
@@ -89,13 +91,12 @@ class Home extends Component {
         </p>
         <ul>
             {articles.map(article => (
-               <li key={article.article_id + 1}><Link style={{ textDecoration: 'none' }} to={"/" + article.article_id}>
-                    <h2>{article.title}</h2>
-                    
+               <li key={article.article_id + 1}><Link to={"/articles/" + article.article_id}>
+                    <h3>{article.title}</h3>
+                    </Link>
                     Topic: {article.topic[0].toUpperCase() + article.topic.slice(1)} | Author: {article.author} | Votes: {article.votes} | Comment Count: {article.comment_count} | Date: {article.created_at.slice(0,10)}
                     <br></br>
                     <br></br>
-                    </Link>
                     Vote for this article: <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, 1)} disabled={this.state.buttonDisabled[article.article_id]}>👆</button>
                     <button className="buttonStyle" onClick={(event) => this.voteClick(article.article_id, -1)} disabled={this.state.buttonDisabled[article.article_id]}>👇</button>
                     </li>

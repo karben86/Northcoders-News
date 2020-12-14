@@ -3,9 +3,10 @@ import { Link } from "@reach/router";
 
 const Nav = () => {
   return (
-    <nav>
+    <nav className="navbar"><b>
       <Link to="/login" className="link">Login</Link>
       <Link to="/" className="link">Home</Link>
+      </b>
     </nav>
   );
 };
