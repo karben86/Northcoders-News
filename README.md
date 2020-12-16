@@ -1,6 +1,6 @@
 # Northcoders News App
 
-I created this project as part of my coding bootcamp at Northcoders to practice my front-end skills. My code is available on Github at [http://localhost:3000](http://localhost:3000) and the app is hosted on Netlify at [http://localhost:3000](http://localhost:3000).
+I created this project as part of my coding bootcamp at Northcoders to practice my front-end skills. My code is available on Github at [https://github.com/karben86/Northcoders-News](https://github.com/karben86/Northcoders-News) and the app is hosted on Netlify at [https://bens-northcoders-news.netlify.app](https://bens-northcoders-news.netlify.app).
 
 ## Description
 
